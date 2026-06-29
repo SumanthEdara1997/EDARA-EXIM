@@ -11,18 +11,23 @@ const PORT = process.env.PORT || 3000;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  console.error('Missing Supabase configuration in .env');
-  process.exit(1);
-}
+let supabase = null;
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+  supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+} else {
+  console.warn('Supabase configuration missing; review endpoints will return a 503 until .env is configured.');
+}
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
 app.get('/api/reviews', async (req, res) => {
+  if (!supabase) {
+    return res.status(503).json({ error: 'Reviews backend is not configured yet.' });
+  }
+
   try {
     const { data, error } = await supabase
       .from('reviews')
@@ -42,6 +47,10 @@ app.post('/api/reviews', async (req, res) => {
 
   if (!name || !stars || !content || !date) {
     return res.status(400).json({ error: 'Missing review fields' });
+  }
+
+  if (!supabase) {
+    return res.status(503).json({ error: 'Reviews backend is not configured yet.' });
   }
 
   try {

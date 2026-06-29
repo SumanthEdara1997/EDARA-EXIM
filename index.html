@@ -7,24 +7,21 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
-        /* Dynamic Theme Custom Properties */
         :root {
-            --primary: #0f2a1d;       /* Deep Luxury Forest Green */
-            --accent: #d4af37;        /* Matte Champagne Gold */
+            --primary: #0f2a1d;
+            --accent: #d4af37;
             --accent-hover: #bfa030;
-            --text-dark: #1c2821;     /* High contrast deep green-black */
+            --text-dark: #1c2821;
             --text-light: #f4f6f3;
             --border-color: rgba(15, 42, 29, 0.15);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            
-            /* Glassmorphism/Transparent Architecture Setup */
             --body-bg: #f4f6f3;
             --header-bg: #0f2a1d;
             --card-bg: rgba(255, 255, 255, 0.88);
             --card-blur: blur(12px);
+            --dropdown-bg: #ffffff;
         }
 
-        /* Dark Theme Variables */
         [data-theme="dark"] {
             --body-bg: #07140e;
             --text-dark: #f0f5f1;
@@ -32,6 +29,7 @@
             --header-bg: #040d09;
             --card-bg: rgba(15, 42, 29, 0.88);
             --card-blur: blur(12px);
+            --dropdown-bg: #0f2a1d;
         }
 
         * {
@@ -53,7 +51,6 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Premium Navigation Header */
         header {
             background-color: var(--header-bg);
             position: sticky;
@@ -73,7 +70,6 @@
             padding: 15px 20px;
         }
 
-        /* Logo Brand Container */
         .brand-wrapper {
             display: flex;
             align-items: center;
@@ -81,7 +77,6 @@
             text-decoration: none;
         }
 
-        /* Image-based Custom Logo Wrapper */
         .special-moringa-logo {
             display: flex;
             align-items: center;
@@ -98,13 +93,11 @@
             transition: var(--transition);
         }
 
-        /* Elegant Hover Dynamics */
         .brand-wrapper:hover .special-moringa-logo img {
             transform: scale(1.05);
             filter: drop-shadow(0px 4px 8px rgba(214, 175, 55, 0.3)) brightness(1.1);
         }
 
-        /* Highlighted Big Company Logo Text */
         .logo-area h1 {
             font-family: 'Cinzel', serif;
             color: var(--accent);
@@ -112,6 +105,7 @@
             letter-spacing: 3px;
             font-weight: 800;
             text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
         }
         
         .logo-area a {
@@ -121,18 +115,18 @@
 
         .nav-links {
             display: flex;
-            gap: 4px;
+            gap: 2px;
             align-items: center;
         }
 
         .nav-links a {
             color: var(--text-light);
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
             text-decoration: none;
-            padding: 10px 14px;
+            padding: 8px 12px;
             transition: var(--transition);
             border-bottom: 3px solid transparent;
             opacity: 0.85;
@@ -150,10 +144,9 @@
             opacity: 1;
         }
 
-        /* Utility Toggles Area */
         .controls-area {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: center;
         }
 
@@ -161,7 +154,7 @@
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--accent);
             color: #ffffff;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 20px;
             cursor: pointer;
             font-size: 12px;
@@ -174,7 +167,90 @@
             color: var(--primary);
         }
 
-        /* Hero Banner Section (Solid Backdrop Layer) */
+        .hamburger-trigger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 1100;
+            padding: 5px;
+        }
+
+        .hamburger-trigger span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .hamburger-trigger.open span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        .hamburger-trigger.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger-trigger.open span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        .side-navigation-drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 320px;
+            height: 100vh;
+            background-color: var(--header-bg);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+            z-index: 1050;
+            transition: cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+            padding: 100px 30px 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-left: 2px solid var(--accent);
+        }
+
+        .side-navigation-drawer.open {
+            right: 0;
+        }
+
+        .side-navigation-drawer a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .side-navigation-drawer a:hover,
+        .side-navigation-drawer a.active-nav {
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--accent);
+            padding-left: 20px;
+        }
+
+        .drawer-overlay-curtain {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1020;
+        }
+        .drawer-overlay-curtain.active {
+            display: block;
+        }
+
         .hero {
             position: relative;
             z-index: 2;
@@ -216,7 +292,6 @@
             color: var(--accent);
         }
 
-        /* Badges Container */
         .badge-row {
             display: flex;
             justify-content: center;
@@ -245,10 +320,9 @@
             fill: var(--accent);
         }
 
-        /* Transparent Page Architecture - Activates image_0c5692.jpg starting from About Section */
         .page-transparent-canvas {
             position: relative;
-            background-image: url('image_0c5692.jpg');
+            background-image: url('image_0c5692.jpg.png');
             background-size: cover;
             background-position: center center;
             background-attachment: fixed;
@@ -256,7 +330,6 @@
             width: 100%;
         }
 
-        /* Ambient overlay tint to balance light/dark modes on top of bright background image */
         .page-transparent-canvas::before {
             content: '';
             position: absolute;
@@ -271,7 +344,6 @@
             background: rgba(7, 20, 14, 0.82);
         }
 
-        /* Layout Framework Wrapper */
         .main-content {
             position: relative;
             z-index: 2; /* Sits cleanly above the background image overlay tint */
@@ -289,7 +361,6 @@
             border-bottom: none;
         }
 
-        /* Typography elements */
         .section-title {
             font-family: 'Cinzel', serif;
             font-size: 38px;
@@ -313,7 +384,6 @@
             margin: 12px auto 0 auto;
         }
 
-        /* Grid Framework for Benefits and Foods */
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -328,7 +398,22 @@
             margin-bottom: 50px;
         }
 
-        /* Premium Translucent Glassmorphic Cards */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--card-blur);
+            -webkit-backdrop-filter: var(--card-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            transition: var(--transition);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(15, 42, 29, 0.2);
+            border-color: var(--accent);
+        }
+
         .info-card {
             background: var(--card-bg);
             backdrop-filter: var(--card-blur);
@@ -393,7 +478,6 @@
             font-weight: 400;
         }
 
-        /* Pricing Module Area */
         .pricing-section {
             background: var(--card-bg);
             backdrop-filter: var(--card-blur);
@@ -402,6 +486,15 @@
             border-radius: 16px;
             padding: 40px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        }
+
+        .pricing-section.glass-card, .form-container.glass-card, .care-box.glass-card, .review-card.glass-card, .reviews-scroll-viewport.glass-card, .reviews-summary-box.glass-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--card-blur);
+            -webkit-backdrop-filter: var(--card-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
         }
 
         .pricing-header-tools {
@@ -467,6 +560,137 @@
             color: var(--primary);
         }
 
+        /* Premium Look Dropdown UI Components */
+        .premium-dropdown-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 35px auto;
+            display: block; /* Modified to be visible uniformly on laptop + mobile */
+        }
+
+        /* Hidden default selector configuration */
+        .pricing-selector-dropdown {
+            display: none;
+        }
+
+        .premium-select-clickbox {
+            background: var(--dropdown-bg);
+            border: 2px solid var(--accent);
+            color: var(--text-dark);
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .premium-select-clickbox::after {
+            content: '';
+            width: 0; height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .premium-dropdown-wrapper.active .premium-select-clickbox::after {
+            transform: rotate(180deg);
+        }
+
+        .premium-dropdown-list {
+            position: absolute;
+            top: 105%; left: 0; width: 100%;
+            background: var(--dropdown-bg);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            z-index: 110; /* Boosted to ensure overlay correctness over content blocks */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            opacity: 0; visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .premium-dropdown-wrapper.active .premium-dropdown-list {
+            opacity: 1; visibility: visible;
+            transform: translateY(0);
+        }
+
+        .premium-dropdown-option {
+            padding: 14px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .premium-dropdown-option:hover {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .premium-dropdown-option:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .premium-dropdown-option.selected {
+            background: rgba(214, 175, 55, 0.15);
+            border-left: 4px solid var(--accent);
+        }
+
+        .premium-native-select-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .premium-native-select-container select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 100%;
+            padding: 14px 45px 14px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            transition: var(--transition);
+            background: var(--dropdown-bg);
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        .premium-native-select-container select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .premium-native-select-container::after {
+            content: '';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0; height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--accent);
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
         .price-display-box {
             text-align: center;
             background: rgba(15, 42, 29, 0.05);
@@ -486,17 +710,16 @@
             color: var(--accent);
         }
 
-        /* Lead Capture Form */
         .form-container {
             background: var(--card-bg);
             backdrop-filter: var(--card-blur);
             -webkit-backdrop-filter: var(--card-blur);
             border: 1px solid var(--border-color);
-            padding: 40px;
             border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
             max-width: 600px;
             margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
         }
 
         .form-group {
@@ -510,7 +733,7 @@
             font-weight: 600;
         }
 
-        .form-group input, .form-group textarea, .form-group select {
+        .form-group input, .form-group textarea {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid var(--border-color);
@@ -523,12 +746,11 @@
         }
 
         [data-theme="dark"] .form-group input, 
-        [data-theme="dark"] .form-group textarea, 
-        [data-theme="dark"] .form-group select {
+        [data-theme="dark"] .form-group textarea {
             background: rgba(15, 42, 29, 0.6);
         }
 
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+        .form-group input:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--accent);
             background: var(--card-bg);
@@ -569,7 +791,6 @@
             font-weight: 600;
         }
 
-        /* Customer Care Layout */
         .care-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -580,9 +801,13 @@
             background: var(--card-bg);
             backdrop-filter: var(--card-blur);
             -webkit-backdrop-filter: var(--card-blur);
-            padding: 30px;
-            border-radius: 12px;
             border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .care-box.glass-card {
+            border-radius: 12px;
         }
 
         .care-box h4 {
@@ -596,16 +821,19 @@
             color: var(--accent);
         }
 
-        /* Reviews Module */
         .reviews-summary-box {
             background: var(--card-bg);
             backdrop-filter: var(--card-blur);
             -webkit-backdrop-filter: var(--card-blur);
             border: 1px solid var(--border-color);
-            padding: 30px;
             border-radius: 16px;
+            padding: 30px;
             text-align: center;
             margin-bottom: 30px;
+        }
+
+        .reviews-summary-box.glass-card {
+            border-radius: 16px;
         }
 
         .rating-big {
@@ -640,20 +868,27 @@
             vertical-align: top;
         }
 
-        /* Continuous Bottom Horizontal Scrolling Viewport */
+        .review-card.glass-card {
+            border-radius: 12px;
+        }
+
         .reviews-scroll-viewport {
+            background: var(--card-bg);
+            backdrop-filter: var(--card-blur);
+            -webkit-backdrop-filter: var(--card-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
             width: 100%;
             height: 240px;
             overflow: hidden;
             position: relative;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            background: var(--card-bg);
-            backdrop-filter: var(--card-blur);
-            -webkit-backdrop-filter: var(--card-blur);
             white-space: nowrap;
             display: flex;
             align-items: center;
+        }
+
+        .reviews-scroll-viewport.glass-card {
+            border-radius: 16px;
         }
 
         #reviewsContainer {
@@ -677,6 +912,26 @@
             font-weight: 700;
         }
 
+        .success-msg,
+        .error-msg {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 18px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success-msg {
+            background: #e6f4ea;
+            color: #137333;
+        }
+
+        .error-msg {
+            background: #fdecea;
+            color: #a12b2b;
+        }
+
         .review-date {
             font-size: 12px;
             color: #55665c;
@@ -686,7 +941,6 @@
             color: #a4b5ab;
         }
 
-        /* Review Input Modal Overlay */
         .modal {
             display: none;
             position: fixed;
@@ -718,7 +972,8 @@
 
         .close-modal {
             position: absolute;
-            top: 20px; right: 20px;
+            top: 20px;
+            right: 20px;
             font-size: 24px;
             cursor: pointer;
             color: var(--text-dark);
@@ -751,7 +1006,6 @@
             color: #ffc107;
         }
 
-        /* Footer execution */
         footer {
             position: relative;
             z-index: 2;
@@ -767,68 +1021,64 @@
             opacity: 0.7;
             margin-bottom: 10px;
         }
-        
+
         footer a {
             color: var(--accent);
             text-decoration: none;
         }
 
-        /* Responsive UI Adjustments */
+        .premium-dropdown-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 35px auto;
+            display: block;
+        }
+
+        .connect-card {
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .connect-card h3 {
+            margin: 0;
+        }
+
+        .premium-select-clickbox::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--accent);
+            transition: var(--transition);
+        }
+
         @media (max-width: 1100px) {
-            .nav-container {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .nav-links {
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
+            .nav-container { padding: 15px 25px; }
+            .nav-links { display: none; }
+            .hamburger-trigger { display: flex; }
         }
 
         @media (max-width: 992px) {
-            .grid-3 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .hero h2 {
-                font-size: 38px;
-            }
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
+            .hero h2 { font-size: 38px; }
         }
 
         @media (max-width: 768px) {
-            .nav-links a {
-                font-size: 11px;
-                padding: 6px 8px;
-            }
-            .grid-3, .grid-2, .care-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero h2 {
-                font-size: 30px;
-            }
-            .hero p {
-                font-size: 16px;
-            }
-            .pricing-header-tools {
-                flex-direction: column;
-                align-items: center;
-            }
-            .pricing-selector {
-                flex-direction: column;
-                width: 100%;
-            }
-            .size-btn {
-                width: 100%;
-                text-align: center;
-            }
-            .pricing-section, .form-container, .info-card {
-                padding: 20px;
-            }
+            .grid-3, .grid-2, .care-grid { grid-template-columns: 1fr; }
+            .hero h2 { font-size: 30px; }
+            .hero p { font-size: 16px; }
+            .pricing-header-tools { flex-direction: column; align-items: center; }
+            .pricing-section, .form-container, .info-card { padding: 20px; }
         }
     </style>
 </head>
 <body>
-
     <header>
         <div class="nav-container">
             <a href="#" class="brand-wrapper">
@@ -847,39 +1097,52 @@
                 <a href="#enquiry" class="nav-item">Enquiry Form</a>
                 <a href="#customer-support" class="nav-item">Customer Support</a>
                 <a href="#reviews" class="nav-item">Reviews</a>
+                <a href="#connect-us" class="nav-item">Connect With Us</a>
             </nav>
             <div class="controls-area">
-                <button class="toggle-btn" id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+                <button class="hamburger-trigger" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Toggle Navigation Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </header>
 
+    <div class="drawer-overlay-curtain" id="drawerOverlay" onclick="toggleDrawer()"></div>
+
+    <nav class="side-navigation-drawer" id="sideDrawer">
+        <a href="#about" class="nav-item" onclick="toggleDrawer()">About Us</a>
+        <a href="#health-benefits" class="nav-item" onclick="toggleDrawer()">Health Benefits</a>
+        <a href="#how-to-use" class="nav-item" onclick="toggleDrawer()">How to Use</a>
+        <a href="#pricing" class="nav-item" onclick="toggleDrawer()">Pricing Details</a>
+        <a href="#enquiry" class="nav-item" onclick="toggleDrawer()">Enquiry Form</a>
+        <a href="#customer-support" class="nav-item" onclick="toggleDrawer()">Customer Support</a>
+        <a href="#reviews" class="nav-item" onclick="toggleDrawer()">Reviews</a>
+        <a href="#connect-us" class="nav-item" onclick="toggleDrawer()">Connect With Us</a>
+    </nav>
+
     <section class="hero">
         <h2>Organic Moringa Powder</h2>
         <p>Premium Quality Plant-Based Nutrition & Global Agricultural Export Specialist</p>
-        <a href="#reviews" class="hero-link">⭐ Customer Reviews Rating: 4.9/5.0</a>
-        
         <div class="badge-row">
             <div class="badge-card">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                Indian Organic Product
+                100% Organic 
             </div>
             <div class="badge-card">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
                 Made in India
             </div>
             <div class="badge-card">
-                <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.2c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.43 10.57 19.5 12 19.5c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 14.5c-3.03 0-5.5-2.47-5.5-5.5s2.47-5.5 5.5-5.5 5.5 2.47 5.5 5.5-2.47 5.5-5.5 5.5z"/></svg>
-                100% Vegan Certified
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.64 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                100% Vegan Friendly
             </div>
         </div>
     </section>
 
-    <!-- START OF TRANSPARENT IMAGE CANVAS AREA (Now featuring image_0c5692.jpg background layout) -->
     <div class="page-transparent-canvas">
         <main class="main-content">
-
-            <!-- PAGE 1: ABOUT US -->
             <section id="about">
                 <h2 class="section-title">About Us</h2>
                 <div class="info-card" style="max-width: 800px; margin: 0 auto; text-align: center;">
@@ -892,20 +1155,19 @@
                 </div>
             </section>
 
-            <!-- PAGE 2: HEALTH BENEFITS -->
             <section id="health-benefits">
                 <h2 class="section-title">Health Benefits</h2>
                 <div class="grid-3">
                     <div class="info-card">
                         <div class="card-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v2h2v-2zm0-6h-2v4h2v-4z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
                         </div>
                         <h3>Immunity Booster</h3>
                         <p>Contains over 46 strong natural antioxidants that help eliminate body toxins, clean the system, and keep your body's immune defenses running strong.</p>
                     </div>
                     <div class="info-card">
                         <div class="card-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 9h-2v4h-2v-4H8v-2h4V7h2v3h4v2h-4v4z"/></svg>
                         </div>
                         <h3>Vitamins & Micronutrients</h3>
                         <p>Highly loaded with natural Iron to prevent tiredness, plant-based Calcium for strong bones, plus Vitamin A and vital complete plant amino acids.</p>
@@ -919,383 +1181,453 @@
                     </div>
                     <div class="info-card">
                         <div class="card-icon">
-                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M11 5.5C11 3.57 9.43 2 7.5 2S4 3.57 4 5.5C4 7.43 5.57 9 7.5 9S11 7.43 11 5.5zm6-1.5c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 5.5c-2.2 0-4 1.8-4 4 0 2.2 1.8 4 4 4s4-1.8 4-4c0-2.2-1.8-4-4-4zm-6 0c-2.2 0-4 1.8-4 4 0 2.2 1.8 4 4 4s4-1.8 4-4c0-2.2-1.8-4-4-4z"/></svg>
                         </div>
                         <h3>Healthy Digestion</h3>
-                        <p>High fiber content combined with natural anti-inflammatory compounds helps soothe the stomach lining, reduces bloating, and improves regular daily bowel movements.</p>
+                        <p>High fiber content combined with natural anti-inflammatory compounds helps soothe the stomach lining, reduces bloating, and improves regular daily movements.</p>
                     </div>
                     <div class="info-card">
                         <div class="card-icon">
-                            <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
                         </div>
                         <h3>Sharp Mind & Focus</h3>
                         <p>Rich in essential vitamins that naturally balance brain chemicals, helping clear out brain fog, improve daily memory focus, and keep stress in check.</p>
                     </div>
                     <div class="info-card">
                         <div class="card-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M15.5 1h-8C6.12 1 5 2.12 5 3.5v17C5 21.88 6.12 23 7.5 23h8c1.38 0 2.5-1.12 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zm-4 21c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5-4H7V4h9v14z"/></svg>
                         </div>
-                        <h3>Blood Sugar Balance</h3>
-                        <p>Contains active plant proteins like isothiocyanates which studies show help stabilize blood sugar glucose levels naturally after carb-heavy meals.</p>
+                        <h3>Weight Management</h3>
+                        <p>Its natural profile helps curb cravings, makes you feel fuller longer, and supports safe fat metabolism goals naturally.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- PAGE 3: HOW TO USE -->
             <section id="how-to-use">
                 <h2 class="section-title">How to Use</h2>
                 <div class="grid-2">
                     <div class="info-card">
-                        <h3 style="color:#2e7d32;">✦ Green Healthy Smoothies</h3>
-                        <p>Simply blend 1 teaspoon of moringa powder with a banana, spinach, yogurt, or almond milk for a quick, nutrient-filled breakfast option.</p>
+                        <h3 style="margin-bottom: 15px; border-bottom: 2px solid var(--accent); padding-bottom: 5px;">Daily Dosage</h3>
+                        <p>Start with half a teaspoon (approx. 2 grams) for the first 5 days. Then safely scale up to 1 full teaspoon (approx. 5 grams) daily for excellent results.</p>
                     </div>
                     <div class="info-card">
-                        <h3 style="color:#2e7d32;">✦ Moringa Herbal Wellness Tea</h3>
-                        <p>Stir a spoonful into a warm cup of hot water with fresh lemon juice and organic honey. It creates a refreshing, light, clean tea tasting like green matcha.</p>
+                        <h3 style="margin-bottom: 15px; border-bottom: 2px solid var(--accent); padding-bottom: 5px;">Easy Methods</h3>
+                        <p>Mix into fresh morning green juices, blend into protein shakes, stir into warm vegetable soups, or brew simply with warm water and lemon juices.</p>
                     </div>
-                    <div class="info-card">
-                        <h3 style="color:#2e7d32;">✦ Superfood Dosa & Idli Batters</h3>
-                        <p>Mix 1 to 2 tablespoons directly into your dosa or idli batter. It turns breakfasts a vibrant green while adding great nutrition without changing the taste!</p>
-                    </div>
-                    <div class="info-card">
-                        <h3 style="color:#2e7d32;">✦ Nutrient-Rich Roti / Chapati / Paratha</h3>
-                        <p>Knead moringa powder directly into whole wheat flour dough to give your rotis a massive boost of dietary iron and complete proteins.</p>
-                    </div>
-                    <div class="info-card">
-                        <h3 style="color:#2e7d32;">✦ Comforting Soups, Dals & Curries</h3>
-                        <p>Stir easily into lentils, sambhar, or vegetable soups right before finishing. It dissolves completely, making it perfect for pickier family members.</p>
-                    </div>
-                    <div class="info-card">
-                        <h3 style="color:#2e7d32;">✦ Fortified Healthy Energy Bars</h3>
-                        <p>Perfect for mixing into oats, dates, nuts, or home-baked treats to craft premium, health-focused daily snacks.</p>
-                    </div>
-                </div>
-
-                <div class="info-card" style="text-align: center; border: 1px solid var(--accent); padding: 25px; border-radius: 12px; max-width: 700px; margin: 0 auto;" id="bulkSection">
-                    <h3 style="color: var(--text-dark); font-family: 'Cinzel', serif; font-size: 18px; margin-bottom: 8px;">Minimum Commercial Wholesale Order Quantity</h3>
-                    <p style="font-weight: 800; font-size: 26px; color: #2e7d32;" id="bulkQtyText">500 KG (Bulk Global Shipping Terminals)</p>
                 </div>
             </section>
 
-            <!-- PAGE 4: PRICING DETAILS -->
             <section id="pricing">
                 <h2 class="section-title">Pricing Details</h2>
                 <div class="pricing-section">
-                    
                     <div class="pricing-header-tools">
-                        <p style="font-weight: 600; margin: 0;">Select a retail packaging profile size variant below to view indicative cost estimates:</p>
-                        <button class="section-unit-btn" id="unitToggle" onclick="toggleUnits()">🇺🇸 Switch to US Units ($ / OZ)</button>
-                    </div>
-                    
-                    <div class="pricing-selector">
-                        <button class="size-btn active" id="btn-size-1" onclick="updatePrice('size1', this)">200 Grams Pack</button>
-                        <button class="size-btn" id="btn-size-2" onclick="updatePrice('size2', this)">500 Grams Pack</button>
-                        <button class="size-btn" id="btn-size-3" onclick="updatePrice('size3', this)">1 KG Pack</button>
+                        <div style="font-size: 15px; font-weight:700;">Select Packing Configuration Matrix:</div>
+                        <button class="section-unit-btn" id="unitToggleBtn" onclick="toggleUnits()">Switch to Imperial Units (oz/lbs)</button>
                     </div>
 
-                    <div class="price-display-box">
-                        <div id="selected-package-title" style="font-weight: 700; text-transform: uppercase; color: var(--accent); font-size: 14px; letter-spacing: 1px;">200 Grams Premium Tin</div>
-                        <div class="price-value" id="package-cost">250 Rs <span style="font-size:14px; font-weight:500; color:var(--text-dark);">/ unit base estimate</span></div>
-                        <p style="font-size: 13px; opacity: 0.8; margin-top: 5px; font-weight: 500;">*Indicative bulk commodity export price tier. Exact pricing finalizes via custom transport quotes.</p>
+                    <div class="premium-dropdown-wrapper" id="pricingDropdownWrapper">
+                        <div class="premium-select-clickbox" onclick="togglePricingDropdown(event)">
+                            <span id="dropdownSelectedLabel">100 Grams (Trial Size)</span>
+                        </div>
+                        <div class="premium-dropdown-list" id="pricingDropdown">
+                            <div class="premium-dropdown-option selected" onclick="selectPrice(0, '100 Grams (Trial Size)')">
+                                <span>100 Grams</span>
+                                <small style="opacity:0.7;">Trial Size</small>
+                            </div>
+                            <div class="premium-dropdown-option" onclick="selectPrice(1, '250 Grams (Standard Size)')">
+                                <span>250 Grams</span>
+                                <small style="opacity:0.7;">Standard Size</small>
+                            </div>
+                            <div class="premium-dropdown-option" onclick="selectPrice(2, '500 Grams (Value Pack)')">
+                                <span>500 Grams</span>
+                                <small style="opacity:0.7;">Value Pack</small>
+                            </div>
+                            <div class="premium-dropdown-option" onclick="selectPrice(3, '1 Kilogram (Economy Pack)')">
+                                <span>1 Kilogram</span>
+                                <small style="opacity:0.7; color:var(--accent); font-weight:700;">Best Value</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="margin-bottom:0;">
+                        <div class="price-display-box">
+                            <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px; opacity:0.8;">FOB Indian Port Rate</div>
+                            <div class="price-value" id="priceUSD">$0.00</div>
+                            <div style="font-size: 12px; opacity: 0.7;" id="unitConversionLabel">100g Pack base rate</div>
+                        </div>
+                        <div class="price-display-box" style="border-left-color: var(--primary);">
+                            <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px; opacity:0.8;">Estimated Domestic INR</div>
+                            <div class="price-value" id="priceINR">₹0.00</div>
+                            <div style="font-size: 12px; opacity: 0.7;">Excluding Local GST Logistics</div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- PAGE 5: ENQUIRY FORM -->
             <section id="enquiry">
                 <h2 class="section-title">Enquiry Form</h2>
                 <div class="form-container">
-                    <h3 style="margin-bottom: 25px; text-align: center; font-family: 'Cinzel', serif; font-size: 19px; color: var(--accent);">Share Your Details For Commercial Quotes</h3>
-                    
-                    <form id="leadForm" onsubmit="handleFormSubmit(event)">
+                    <form id="enquiryForm" onsubmit="submitEnquiry(event)">
                         <div class="form-group">
-                            <label for="fullName">Full Name / Corporate Agent</label>
-                            <input type="text" id="fullName" placeholder="John Doe" required>
+                            <label for="clientName">Full Name / Corporate Entity *</label>
+                            <input type="text" id="clientName" required placeholder="John Doe / Example Corp">
                         </div>
                         <div class="form-group">
-                            <label for="companyName">Company / Brand Name</label>
-                            <input type="text" id="companyName" placeholder="Global Superfoods Ltd." required>
+                            <label for="clientEmail">Official Email Address *</label>
+                            <input type="email" id="clientEmail" required placeholder="john@example.com">
                         </div>
                         <div class="form-group">
-                            <label for="emailAddr">Business Email Address</label>
-                            <input type="email" id="emailAddr" placeholder="name@company.com" required>
+                            <label for="selectedSizeField">Required Configuration Pack</label>
+                            <div class="premium-native-select-container">
+                                <select id="selectedSizeField">
+                                    <option value="100g">100 Grams Pack</option>
+                                    <option value="250g">250 Grams Pack</option>
+                                    <option value="500g">500 Grams Pack</option>
+                                    <option value="1kg">1 Kilogram Bulk Pack</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="requiredPkg" id="formPkgLabel">Preferred Packing Layout</label>
-                            <select id="requiredPkg">
-                                <option value="size1" id="opt-size-1">200g Premium Tin</option>
-                                <option value="size2" id="opt-size-2">500g Premium Tin</option>
-                                <option value="size3" id="opt-size-3">1kg Premium Tin</option>
-                                <option value="bulk" id="opt-size-bulk">Industrial Bags (&gt;25kg)</option>
-                            </select>
+                            <label for="orderQty">Estimated Order Quantity (Packs / Metric Tons) *</label>
+                            <input type="text" id="orderQty" required placeholder="e.g. 500 packs or 2 Metric Tons">
                         </div>
                         <div class="form-group">
-                            <label for="msgArea">Target Volumes & Logistics Inquiries</label>
-                            <textarea id="msgArea" rows="4" placeholder="Mention tentative order tonnage requirements and shipping port destination details..."></textarea>
+                            <label for="clientMessage">Custom Logistics, Port Destination, or Packaging Instructions</label>
+                            <textarea id="clientMessage" rows="4" placeholder="Specify any custom private labeling or shipping requirements..."></textarea>
                         </div>
-                        <button type="submit" class="submit-btn">Submit Request Portfolio</button>
+                        <button type="submit" class="submit-btn">Submit Official RFQ / Enquiry</button>
                     </form>
-                    
-                    <div id="successBanner" class="success-msg">
-                        ✓ Thank you! Your client profile details have been securely shared with Edara Exim's Global Trade Desk. The page will auto-refresh shortly to log new entries.
+                    <div class="success-msg" id="formSuccess">
+                        Thank you! Your Request for Quote (RFQ) has been transmitted securely. An export division agent will reply within 12 business hours.
                     </div>
                 </div>
             </section>
 
-            <!-- PAGE 6: CUSTOMER SUPPORT -->
             <section id="customer-support">
                 <h2 class="section-title">Customer Support</h2>
                 <div class="care-grid">
                     <div class="care-box">
-                        <h4>Wholesale Client Support</h4>
-                        <p style="font-size: 14.5px; margin-bottom: 10px;">Our specialized client assistance coordinates direct routing, freight monitoring status, and custom clearing documentation files.</p>
-                        <p><strong>Hours:</strong> 09:00 AM - 9:00 PM (Mon - Sat)</p>
-                        <p><strong>Hotline Desk:</strong> +91 8555877072 EDARA EXIM CARE</p>
+                        <h4>Global Export Headquarters</h4>
+                        <p style="font-size: 14px; margin-bottom: 8px;"><strong>Location:</strong> India Primary Logistics Hub Gateway Corridor</p>
+                        <p style="font-size: 14px; margin-bottom: 8px;"><strong>Hours:</strong> Mon - Sat | 09:00 - 18:00 IST</p>
+                        <p style="font-size: 14px;"><strong>Email:</strong> exports@edaraexim.com</p>
                     </div>
                     <div class="care-box">
-                        <h4>Quality Control Manifests</h4>
-                        <p style="font-size: 14.5px; margin-bottom: 10px;">Every production batch undergoes strict laboratory verification to cross-check purity levels, verify moisture density indices, and certify true vegan limits.</p>
-                        <p><strong>Email Address:</strong> edaraexim@gmail.com</p>
+                        <h4>Immediate Response SLA</h4>
+                        <p style="font-size: 14.5px; opacity:0.9;">We ensure complete phytosanitary clearance certifications, rigorous container tracking parameters, and custom port clearance paperwork for every international client system.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- PAGE 7: REVIEWS -->
             <section id="reviews">
                 <h2 class="section-title">Reviews</h2>
-                
                 <div class="reviews-summary-box">
-                    <div class="rating-big">4.9</div>
+                    <div class="rating-big">4.5 <span style="font-size:20px; opacity:0.6;">/ 5.0</span></div>
                     <div class="stars">★★★★★</div>
-                    <p style="font-size: 14.5px; margin-bottom: 20px;">Based on verified trade buyers and consumer testing portfolios.</p>
-                    <button class="submit-btn" style="max-width: 250px; margin: 0 auto;" onclick="openReviewModal()">Write a Google Review</button>
+                    <p style="font-size:14px; opacity:0.8; margin-bottom:15px;">Based on verified international client custom compliance reports</p>
+                    <button class="toggle-btn" style="background:var(--primary); color:white; border:none;" onclick="openReviewModal()">✍ Write A Verified Review</button>
                 </div>
-
-                <div class="reviews-scroll-viewport">
+                
+                <div class="reviews-scroll-viewport" id="viewportNode">
                     <div id="reviewsContainer">
-                        <div class="review-card">
-                            <div class="review-header">
-                                <span class="reviewer-name">Aarav Mehta</span>
-                                <span class="review-date">May 14, 2026</span>
-                            </div>
-                            <div class="stars" style="font-size: 16px; margin: 0 0 8px 0;">★★★★★</div>
-                            <p style="font-size: 14px;">The purity of this Moringa powder is unmatched. We mixed it into our daily idli and dosa batters, and the children love the vibrant green color without noticing any harsh taste change. Top tier agricultural quality!</p>
                         </div>
-
-                        <div class="review-card">
-                            <div class="review-header">
-                                <span class="reviewer-name">Sophia Logistics Ltd.</span>
-                                <span class="review-date">April 28, 2026</span>
-                            </div>
-                            <div class="stars" style="font-size: 16px; margin: 0 0 8px 0;">★★★★★</div>
-                            <p style="font-size: 14px;">Imported a bulk terminal batch of 500 KG to our European warehouse portfolio. Purity certifications, vegan compliance paperwork, and moisture levels were perfectly matching premium specs. Highly recommended corporate trade supplier.</p>
-                        </div>
-                    </div>
                 </div>
             </section>
+
+<section id="connect-us">
+    <h2 class="section-title">Connect With Us</h2>
+    <div class="grid-3" style="max-width: 800px; margin: 0 auto;">
+        <a href="https://wa.me/7095336214" target="_blank" class="info-card glass-card connect-card">
+            <div class="card-icon"><img src="whatsapp-icon.png" alt="WhatsApp" style="width:30px;"></div>
+            <h3>WhatsApp</h3>
+        </a>
+        
+        <a href="https://www.instagram.com/shruthi_2429" target="_blank" class="info-card glass-card connect-card">
+            <div class="card-icon"><img src="instagram-icon.png" alt="Instagram" style="width:30px;"></div>
+            <h3>Instagram</h3>
+        </a>
+        
+        <a href="mailto:shruthi.thalluri@gmail.com" class="info-card glass-card connect-card">
+            <div class="card-icon"><img src="email-icon.png" alt="Email" style="width:30px;"></div>
+            <h3>Email</h3>
+        </a>
+    </div>
+</section>
 
         </main>
     </div>
-    <!-- END OF TRANSPARENT IMAGE CANVAS AREA -->
+
+    <footer>
+        <p>&copy; 2026 Edara Exim. All Rights Reserved. Pure Organic Agri-Systems.</p>
+        <p>Built with Transparent Framework Architecture Systems | <a href="#">Terms & Conditions</a></p>
+    </footer>
 
     <div class="modal" id="reviewModal">
         <div class="modal-content">
             <button class="close-modal" onclick="closeReviewModal()">&times;</button>
-            <h3 style="font-family: 'Cinzel', serif; margin-bottom: 10px; color: var(--primary); text-align: center;">Write a Google Review</h3>
-            <p style="font-size: 13px; text-align: center; margin-bottom: 20px;">Your feedback helps globally scale natural plant nutrition ecosystems.</p>
-            
-            <form id="googleReviewForm" onsubmit="handleReviewSubmit(event)">
+            <h3 style="font-family:'Cinzel', serif; margin-bottom:10px; color:var(--primary);">Submit Verified Review</h3>
+            <form id="googleReviewForm" onsubmit="submitReview(event)">
                 <div class="form-group">
-                    <label for="revName">Your Profile Name</label>
-                    <input type="text" id="revName" placeholder="e.g. Elena Rostova" required>
+                    <label>Your Name / Business Entity</label>
+                    <input type="text" id="revName" required placeholder="e.g. Liam Henderson GmbH">
                 </div>
-                
-                <div class="form-group">
-                    <label style="text-align: center; display: block; margin-bottom: 2px;">Overall Experience Rating</label>
+                <div class="form-group" style="margin-bottom:5px;">
+                    <label>Rating Score</label>
                     <div class="star-rating-input">
-                        <input type="radio" id="star5" name="userRating" value="5" required><label for="star5">★</label>
-                        <input type="radio" id="star4" name="userRating" value="4"><label for="star4">★</label>
-                        <input type="radio" id="star3" name="userRating" value="3"><label for="star3">★</label>
-                        <input type="radio" id="star2" name="userRating" value="2"><label for="star2">★</label>
-                        <input type="radio" id="star1" name="userRating" value="1"><label for="star1">★</label>
+                        <input type="radio" id="s5" name="userRating" value="5" checked><label for="s5">★</label>
+                        <input type="radio" id="s4" name="userRating" value="4"><label for="s4">★</label>
+                        <input type="radio" id="s3" name="userRating" value="3"><label for="s3">★</label>
+                        <input type="radio" id="s2" name="userRating" value="2"><label for="s2">★</label>
+                        <input type="radio" id="s1" name="userRating" value="1"><label for="s1">★</label>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label for="revComments">Product Evaluation and Remarks</label>
-                    <textarea id="revComments" rows="3" placeholder="Share details of your experience with our organic powders, logistics, or custom tinned packaging configurations..." required></textarea>
+                    <label>Review Remarks</label>
+                    <textarea id="revComments" rows="4" required placeholder="Share your experience regarding product quality, lead times, or packaging stability..."></textarea>
                 </div>
-
-                <button type="submit" class="submit-btn">Publish to Google Business</button>
+                <button type="submit" class="submit-btn">Share your Experience </button>
             </form>
+            <div class="success-msg" id="reviewSuccess">Thank you for your feedback!</div>
+            <div class="error-msg" id="reviewError"></div>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Edara Exim. All Rights Reserved. Crafted with Pride in India.</p>
-        <p style="font-size: 11px; opacity: 0.6;">Corporate Export Terminals: New Delhi &bull; Mumbai Port &bull; Chennai Air Cargo Terminal</p>
-    </footer>
-
     <script>
-        // Global Variables
-        let currentSystem = 'metric'; 
-        let currentSelectedSize = 'size1';
-        
-        let scrollXPos = 0;
-        let scrollSpeed = 0.8; 
-        let animationFrameId = null;
-        const container = document.getElementById('reviewsContainer');
-        const viewport = document.querySelector('.reviews-scroll-viewport');
+        // Core Repository Pricing State Matrix
+        const prices = [
+            { baseMetric: "100 Grams", baseImperial: "3.52 Ounces", usd: 4.50, inr: 180 },
+            { baseMetric: "250 Grams", baseImperial: "8.81 Ounces", usd: 9.75, inr: 250 },
+            { baseMetric: "500 Grams", baseImperial: "1.10 Pounds", usd: 17.50, inr: 450 },
+            { baseMetric: "1 Kilogram", baseImperial: "2.20 Pounds", usd: 31.00, inr: 820 }
+        ];
 
-        // Continuous Infinite Horizontal Scroller Runtime Execution
-        function runReviewsScroller() {
-            scrollXPos -= scrollSpeed;
-            
-            const cards = container.querySelectorAll('.review-card:not(.cloned)');
-            let totalOriginalWidth = 0;
-            cards.forEach(c => totalOriginalWidth += c.offsetWidth + 20); 
+        let currentSelectedIndex = 0;
+        let useImperialUnits = false;
 
-            if (Math.abs(scrollXPos) >= totalOriginalWidth) {
-                scrollXPos = 0; 
-            }
+        // Drawer Drawer Navigation Engine
+        function toggleDrawer() {
+            const drawer = document.getElementById('sideDrawer');
+            const overlay = document.getElementById('drawerOverlay');
+            const btn = document.getElementById('hamburgerBtn');
             
-            container.style.transform = `translateX(${scrollXPos}px)`;
-            animationFrameId = requestAnimationFrame(runReviewsScroller);
+            drawer.classList.toggle('open');
+            overlay.classList.toggle('active');
+            btn.classList.toggle('open');
         }
 
-        function refreshScrollerItems() {
-            container.querySelectorAll('.review-card.cloned').forEach(el => el.remove());
-            const originalCards = container.querySelectorAll('.review-card');
-            originalCards.forEach(card => {
-                const clone = card.cloneNode(true);
-                clone.classList.add('cloned');
-                container.appendChild(clone);
-            });
-        }
-
-        // Initialize Loop Configurations & ScrollSpy Line Indicator
-        window.addEventListener('DOMContentLoaded', () => {
-            refreshScrollerItems();
-            animationFrameId = requestAnimationFrame(runReviewsScroller);
-            spyScrollSections();
-        });
-
-        viewport.addEventListener('mouseenter', () => cancelAnimationFrame(animationFrameId));
-        viewport.addEventListener('mouseleave', () => animationFrameId = requestAnimationFrame(runReviewsScroller));
-
-        window.addEventListener('scroll', spyScrollSections);
-
-        function spyScrollSections() {
-            const sections = document.querySelectorAll('main section');
-            const navItems = document.querySelectorAll('.nav-links .nav-item');
-            
-            let currentSectionId = "";
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 140; 
-                if (window.scrollY >= sectionTop) {
-                    currentSectionId = section.getAttribute('id');
-                }
-            });
-
-            navItems.forEach(item => {
-                item.classList.remove('active-nav');
-                if (item.getAttribute('href') === `#${currentSectionId}`) {
-                    item.classList.add('active-nav');
-                }
-            });
-        }
-
-        // Theme Switcher (Light / Dark)
-        function toggleTheme() {
-            const body = document.body;
-            const currentTheme = body.getAttribute('data-theme');
-            const themeBtn = document.getElementById('themeToggle');
-            
-            if (currentTheme === 'dark') {
-                body.removeAttribute('data-theme');
-                themeBtn.innerText = "🌙 Dark Mode";
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                themeBtn.innerText = "☀️ Light Mode";
-            }
-        }
-
-        // Pricing Dual Value Matrix
-        const dualPricingMatrix = {
-            'size1': {
-                metric: { title: '200 Grams Premium Tin', cost: '250 Rs' },
-                us: { title: '8 OZ/(226grams) Premium Tin', cost: '$9.99 USD' }
-            },
-            'size2': {
-                metric: { title: '500 Grams Premium Tin', cost: '450 Rs' },
-                us: { title: '18 OZ/(510grams) Premium Tin', cost: '$19.19 USD' }
-            },
-            'size3': {
-                metric: { title: '1 Kilogram Premium Tin', cost: '750 Rs' },
-                us: { title: '36 OZ/(1020grams) Premium Tin', cost: '$29.09 USD' }
-            }
-        };
-
+        // Metric System Conversion Core Logic
         function toggleUnits() {
-            const unitBtn = document.getElementById('unitToggle');
+            useImperialUnits = !useImperialUnits;
+            const btn = document.getElementById('unitToggleBtn');
+            btn.innerHTML = useImperialUnits ? "Switch to Metric Units (g/kg)" : "Switch to Imperial Units (oz/lbs)";
             
-            if (currentSystem === 'metric') {
-                currentSystem = 'us';
-                unitBtn.innerText = "🔄 Switch to Metric Units (Rs / Grams)";
-                
-                document.getElementById('btn-size-1').innerText = "8 OZ Pack";
-                document.getElementById('btn-size-2').innerText = "18 OZ Pack";
-                document.getElementById('btn-size-3').innerText = "36 OZ Pack";
-                
-                document.getElementById('opt-size-1').innerText = "8 OZ Premium Tin";
-                document.getElementById('opt-size-2').innerText = "18 OZ Premium Tin";
-                document.getElementById('opt-size-3').innerText = "36 OZ Premium Tin";
-                document.getElementById('opt-size-bulk').innerText = "Industrial Bulk Cargo (>1100 lbs)";
-                
-                document.getElementById('bulkQtyText').innerText = "1,102 lbs / 500 KG (Bulk Wholesale Shipping)";
-            } else {
-                currentSystem = 'metric';
-                unitBtn.innerText = "🇺🇸 Switch to US Units ($ / OZ)";
-                
-                document.getElementById('btn-size-1').innerText = "200 Grams Pack";
-                document.getElementById('btn-size-2').innerText = "500 Grams Pack";
-                document.getElementById('btn-size-3').innerText = "1 KG Pack";
-                
-                document.getElementById('opt-size-1').innerText = "200g Premium Tin";
-                document.getElementById('opt-size-2').innerText = "500g Premium Tin";
-                document.getElementById('opt-size-3').innerText = "1kg Premium Tin";
-                document.getElementById('opt-size-bulk').innerText = "Industrial Bags (>25kg)";
-                
-                document.getElementById('bulkQtyText').innerText = "500 KG (Bulk Global Shipping Terminals)";
+            // Re-render strings inside elements cleanly
+            updatePrices();
+            updateDropdownLabels();
+        }
+
+        // Toggle custom dropdown visibility
+        function togglePricingDropdown(event) {
+            event.stopPropagation();
+            const wrapper = document.getElementById('pricingDropdownWrapper');
+            wrapper.classList.toggle('active');
+        }
+
+        // Handle selection within custom dropdown framework
+        function selectPrice(index, displayLabel) {
+            currentSelectedIndex = index;
+            
+            // Remove previous selection highlight state
+            const options = document.querySelectorAll('.premium-dropdown-option');
+            options.forEach((opt, idx) => {
+                if(idx === index) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+
+            // Synchronize the underlying form select input element
+            const syncSelect = document.getElementById('selectedSizeField');
+            if(syncSelect) {
+                syncSelect.selectedIndex = index;
             }
-            renderActivePrice();
+
+            updatePrices();
+            document.getElementById('pricingDropdownWrapper').classList.remove('active');
         }
 
-        function updatePrice(sizeKey, buttonRef) {
-            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
-            buttonRef.classList.add('active');
-            currentSelectedSize = sizeKey;
-            renderActivePrice();
+        function updateDropdownLabels() {
+            const options = document.querySelectorAll('.premium-dropdown-option');
+            const labels = ["Trial Size", "Standard Size", "Value Pack", "Economy Pack"];
+            const bestValueTag = "Best Value";
+
+            options.forEach((opt, idx) => {
+                const item = prices[idx];
+                const sizeStr = useImperialUnits ? item.baseImperial : item.baseMetric;
+                
+                if (idx === 3) {
+                    opt.innerHTML = `<span>${sizeStr}</span><small style="opacity:0.7; color:var(--accent); font-weight:700;">${bestValueTag}</small>`;
+                } else {
+                    opt.innerHTML = `<span>${sizeStr}</span><small style="opacity:0.7;">${labels[idx]}</small>`;
+                }
+            });
         }
 
-        function renderActivePrice() {
-            const data = dualPricingMatrix[currentSelectedSize][currentSystem];
-            document.getElementById('selected-package-title').innerText = data.title;
-            document.getElementById('package-cost').innerHTML = data.cost + ' <span style="font-size:14px; font-weight:500; color:var(--text-dark);">/ unit base estimate</span>';
+        // Master Layout Content Renderer
+        function updatePrices() {
+            const activeObject = prices[currentSelectedIndex];
+            
+            // Render Label Trigger Display text
+            const selectedLabelNode = document.getElementById('dropdownSelectedLabel');
+            const sizeLabelStr = useImperialUnits ? activeObject.baseImperial : activeObject.baseMetric;
+            selectedLabelNode.innerText = sizeLabelStr;
+
+            // Render Price Fields
+            document.getElementById('priceUSD').innerText = `$${activeObject.usd.toFixed(2)}`;
+            document.getElementById('priceINR').innerText = `₹${activeObject.inr.toLocaleString('en-IN')}`;
+            
+            // Render details configuration subtext
+            const subLabelNode = document.getElementById('unitConversionLabel');
+            subLabelNode.innerText = `${sizeLabelStr} package core configuration rate matrix metrics.`;
         }
 
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            document.getElementById('leadForm').style.opacity = '0.3';
-            document.getElementById('leadForm').style.pointerEvents = 'none';
-            document.getElementById('successBanner').style.display = 'block';
-            setTimeout(function() {
-                location.reload();
-            }, 3500);
+        const API_REVIEW_ENDPOINT = '/api/reviews';
+
+        const defaultReviews = [
+            { name: "Global Trading Corp (Japan)", date: "3 weeks ago", stars: "★★★★★", content: "Phytosanitary documentation clear, pristine high-integrity green color indexing profile. Exceptional quality." },
+            { name: "Nature Foods LLC (USA)", date: "1 month ago", stars: "★★★★★", content: "Bulk delivery arrive right on schedule time frames. Exceptional moisture control profiling systems." },
+            { name: "EuroNutri Group (Germany)", date: "2 months ago", stars: "★★★★☆", content: "High microbial safety testing index parameters match up cleanly with EU stringent specifications limits." },
+            { name: "Al-Agri Network (UAE)", date: "2 months ago", stars: "★★★★★", content: "Excellent customer management logistics support, packaging arrived sealed properly without air leaks." }
+        ];
+
+        let reviewDatabase = [];
+
+        async function fetchReviews() {
+            try {
+                const response = await fetch(API_REVIEW_ENDPOINT);
+                if (!response.ok) throw new Error('Unable to fetch reviews');
+                const reviews = await response.json();
+                if (Array.isArray(reviews) && reviews.length) {
+                    reviewDatabase = reviews;
+                    return;
+                }
+            } catch (error) {
+                console.warn('Could not load reviews from backend, using defaults.', error);
+                reviewDatabase = [...defaultReviews];
+            }
         }
 
-        // Reviews Form Controller
+        async function postReview(review) {
+            const response = await fetch(API_REVIEW_ENDPOINT, {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-store',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(review)
+            });
+
+            if (!response.ok) {
+                const errorBody = await response.json().catch(() => ({}));
+                throw new Error(errorBody.error || 'Review submission failed');
+            }
+
+            return response.json();
+        }
+
+        function buildStarString(ratingValue) {
+            const numericRating = Math.max(1, Math.min(5, Number(ratingValue) || 5));
+            return '★'.repeat(numericRating) + '☆'.repeat(5 - numericRating);
+        }
+
+        function updateReviewSummary() {
+            const summaryRatingNode = document.querySelector('.reviews-summary-box .rating-big');
+            const summaryStarsNode = document.querySelector('.reviews-summary-box .stars');
+            const summaryTextNode = document.querySelector('.reviews-summary-box p');
+
+            if (!summaryRatingNode || !summaryStarsNode || !summaryTextNode) return;
+
+            if (!reviewDatabase.length) {
+                summaryRatingNode.innerHTML = '4.5 <span style="font-size:20px; opacity:0.6;">/ 5.0</span>';
+                summaryStarsNode.innerHTML = '★★★★★';
+                summaryTextNode.innerText = 'Based on verified international client custom compliance reports';
+                return;
+            }
+
+            const ratings = reviewDatabase.map(review => {
+                const starCount = (review.stars || '').split('').filter(char => char === '★').length;
+                return Number.isFinite(starCount) ? starCount : 5;
+            });
+            const averageRating = ratings.reduce((sum, value) => sum + value, 0) / ratings.length;
+            const roundedAverage = averageRating.toFixed(1);
+
+            summaryRatingNode.innerHTML = `${roundedAverage} <span style="font-size:20px; opacity:0.6;">/ 5.0</span>`;
+            summaryStarsNode.innerHTML = buildStarString(Math.round(averageRating));
+            summaryTextNode.innerText = `Based on ${reviewDatabase.length} verified international client custom compliance reports`;
+        }
+
+        function renderReviews() {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = '';
+
+            if (!reviewDatabase.length) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'review-card';
+                emptyState.innerHTML = '<p style="font-size:14px; opacity:0.9;">No verified reviews yet. Be the first to share your experience.</p>';
+                container.appendChild(emptyState);
+                updateReviewScroll();
+                updateReviewSummary();
+                return;
+            }
+            
+            const processingArray = [...reviewDatabase, ...reviewDatabase];
+            
+            processingArray.forEach(rev => {
+                const card = document.createElement('div');
+                card.className = 'review-card';
+                card.innerHTML = `
+                    <div class="review-header">
+                        <span class="reviewer-name">${rev.name}</span>
+                        <span class="review-date">${rev.date}</span>
+                    </div>
+                    <div class="stars" style="font-size:16px; margin:0 0 8px 0;">${rev.stars}</div>
+                    <p style="font-size:14px; opacity:0.9;">${rev.content}</p>
+                `;
+                container.appendChild(card);
+            });
+            updateReviewScroll();
+            updateReviewSummary();
+        }
+
+        function updateReviewScroll() {
+            const container = document.getElementById('reviewsContainer');
+            const contentWidth = container.scrollWidth / 2 || 380 * reviewDatabase.length;
+            const duration = Math.max(20, reviewDatabase.length * 7);
+            reviewStyleBlock.innerHTML = `
+                @keyframes scrollLinear {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-${contentWidth}px); }
+                }
+            `;
+            container.style.animation = `scrollLinear ${duration}s linear infinite`;
+        }
+
+        const reviewStyleBlock = document.createElement('style');
+        reviewStyleBlock.id = 'reviewScrollStyles';
+        document.head.appendChild(reviewStyleBlock);
+
+        let reviewErrorTimer;
+
+        // Modal triggers execution handlers
         function openReviewModal() {
+            const reviewError = document.getElementById('reviewError');
+            reviewError.style.display = 'none';
+            reviewError.textContent = '';
+            clearTimeout(reviewErrorTimer);
+            setReviewFormEnabled(true);
             document.getElementById('reviewModal').style.display = 'flex';
         }
 
@@ -1303,42 +1635,192 @@
             document.getElementById('reviewModal').style.display = 'none';
         }
 
-        function handleReviewSubmit(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById('revName').value;
-            const comments = document.getElementById('revComments').value;
-            const ratingValue = document.querySelector('input[name="userRating"]:checked').value;
-            
-            let starString = '';
-            for(let i=0; i<ratingValue; i++) starString += '★';
-            for(let j=ratingValue; j<5; j++) starString += '☆';
+        function showReviewError(message, timeout = 2000) {
+            const reviewError = document.getElementById('reviewError');
+            clearTimeout(reviewErrorTimer);
+            reviewError.textContent = message;
+            reviewError.style.display = 'block';
 
-            const newReview = document.createElement('div');
-            newReview.className = 'review-card';
-            newReview.innerHTML = `
-                <div class="review-header">
-                    <span class="reviewer-name">${name} <span style="font-size:11px; background:#e6f4ea; color:#137333; padding:2px 6px; border-radius:10px; margin-left:5px;">Verified</span></span>
-                    <span class="review-date">Just Now</span>
-                </div>
-                <div class="stars" style="font-size: 16px; margin: 0 0 8px 0; color: #ffc107;">${starString}</div>
-                <p style="font-size: 14px;">${comments}</p>
-            `;
-
-            container.insertBefore(newReview, container.firstChild);
-            refreshScrollerItems();
-
-            document.getElementById('googleReviewForm').reset();
-            closeReviewModal();
-            alert('Your review has been successfully submitted to Google Business infrastructure mirrors!');
+            reviewErrorTimer = setTimeout(() => {
+                reviewError.style.display = 'none';
+                reviewError.textContent = '';
+            }, timeout);
         }
 
+        function setReviewFormEnabled(enabled) {
+            const form = document.getElementById('googleReviewForm');
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = !enabled;
+                submitButton.textContent = enabled ? 'Share your Experience ' : 'Sending...';
+            }
+            const inputs = form.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.disabled = !enabled;
+            });
+        }
+
+        async function submitReview(e) {
+            e.preventDefault();
+            const name = document.getElementById('revName').value.trim();
+            const comments = document.getElementById('revComments').value.trim();
+            const ratingValue = document.querySelector('input[name="userRating"]:checked').value;
+
+            if (!name || !comments) {
+                alert('Please provide both your name and review comments.');
+                return;
+            }
+
+            setReviewFormEnabled(false);
+
+            let starString = '';
+            for (let i = 0; i < ratingValue; i++) starString += '★';
+            for (let j = ratingValue; j < 5; j++) starString += '☆';
+
+            const now = new Date();
+            const formattedDate = now.toLocaleString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const newReview = {
+                name: `${name} [Verified]`,
+                date: formattedDate,
+                stars: starString,
+                content: comments
+            };
+
+            try {
+                await postReview(newReview);
+                reviewDatabase.unshift(newReview);
+                renderReviews();
+
+                const reviewSuccess = document.getElementById('reviewSuccess');
+                reviewSuccess.style.display = 'block';
+                document.getElementById('reviewError').style.display = 'none';
+
+                setTimeout(() => {
+                    reviewSuccess.style.display = 'none';
+                    document.getElementById('googleReviewForm').reset();
+                    closeReviewModal();
+                }, 2000);
+            } catch (error) {
+                console.error(error);
+                showReviewError(error.message || 'Review submission failed. Please try again later.');
+            } finally {
+                setReviewFormEnabled(true);
+            }
+        }
+
+        // Close dropdown layers if an outside region of the viewport is clicked
         window.onclick = function(event) {
             const modal = document.getElementById('reviewModal');
             if (event.target == modal) {
                 closeReviewModal();
             }
+            if (!event.target.closest('.premium-dropdown-wrapper')) {
+                const wrapperNode = document.getElementById('pricingDropdownWrapper');
+                if(wrapperNode) wrapperNode.classList.remove('active');
+            }
         }
+
+        // Runtime startup initialization sequencing hooks
+        document.addEventListener('DOMContentLoaded', async () => {
+            updatePrices();
+            await fetchReviews();
+            renderReviews();
+
+            // Handle manual fallback update sync matching for form element
+            const syncSelect = document.getElementById('selectedSizeField');
+            if(syncSelect) {
+                syncSelect.addEventListener('change', (e) => {
+                    const labelStr = e.target.options[e.target.selectedIndex].text;
+                    selectPrice(e.target.selectedIndex, labelStr);
+                });
+            }
+        });
+           // 1. Intersection Observer for Navigation Highlighting
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute("id");
+                    document.querySelectorAll(".nav-item").forEach(link => {
+                        link.classList.remove("active-nav");
+                        if (link.getAttribute("href") === `#${id}`) link.classList.add("active-nav");
+                    });
+                }
+            });
+        }, { rootMargin: '-50% 0px -50% 0px' });
+        document.querySelectorAll("section").forEach(section => observer.observe(section));
+
+        // 2. Enquiry Form Auto-Refresh Logic and submission handling
+        async function submitEnquiry(event) {
+    event.preventDefault();
+
+    // 1. Setup UI Elements
+    const form = document.getElementById('enquiryForm');
+    const successMsg = document.getElementById('formSuccess');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    // Configuration - Replace with your real details
+    const ACCESS_KEY = '7f923ec0-506b-4492-ad2f-16435ba00916'; 
+    const API_ENDPOINT = 'https://api.web3forms.com/submit'; // Or your service URL
+
+    // 2. Prepare Data
+    const formData = {
+        access_key: ACCESS_KEY, // Many services require the key inside the body
+        name: document.getElementById('clientName').value,
+        email: document.getElementById('clientEmail').value,
+        size: document.getElementById('selectedSizeField').value,
+        qty: document.getElementById('orderQty').value,
+        message: document.getElementById('clientMessage').value
+    };
+
+    // 3. UI: Loading State
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    try {
+        // 4. API Call
+        const response = await fetch(API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // 5. UI: Success State
+            form.style.display = 'none';
+            successMsg.style.display = 'block';
+
+            // 6. UI: Auto-Refresh Logic (Code 2 integration)
+            setTimeout(() => {
+                form.style.display = 'block';
+                successMsg.style.display = 'none';
+                form.reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Official RFQ / Enquiry';
+            }, 5000);
+        } else {
+            throw new Error(result.message || 'Submission failed');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Official RFQ / Enquiry';
+    }
+}
+
     </script>
+
 </body>
 </html>

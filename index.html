@@ -1493,6 +1493,7 @@
         }
 
         const API_REVIEW_ENDPOINT = '/api/reviews';
+        const REVIEW_FALLBACK_ENDPOINT = 'https://jvsngwegbtjgrvicxzhx.supabase.co/rest/v1/reviews';
 
         const defaultReviews = [
             { name: "Global Trading Corp (Japan)", date: "3 weeks ago", stars: "★★★★★", content: "Phytosanitary documentation clear, pristine high-integrity green color indexing profile. Exceptional quality." },
@@ -1503,39 +1504,76 @@
 
         let reviewDatabase = [];
 
-        async function fetchReviews() {
+        function getStoredReviews() {
             try {
-                const response = await fetch(API_REVIEW_ENDPOINT);
+                const rawValue = localStorage.getItem('edaraReviews');
+                if (!rawValue) return [];
+                const parsedValue = JSON.parse(rawValue);
+                return Array.isArray(parsedValue) ? parsedValue : [];
+            } catch (error) {
+                console.warn('Could not read stored reviews', error);
+                return [];
+            }
+        }
+
+        function saveStoredReviews(reviews) {
+            try {
+                localStorage.setItem('edaraReviews', JSON.stringify(reviews));
+            } catch (error) {
+                console.warn('Could not save stored reviews', error);
+            }
+        }
+
+        async function fetchReviews() {
+            const storedReviews = getStoredReviews();
+            if (storedReviews.length) {
+                reviewDatabase = storedReviews;
+                return;
+            }
+
+            try {
+                const response = await fetch(API_REVIEW_ENDPOINT, { cache: 'no-store' });
                 if (!response.ok) throw new Error('Unable to fetch reviews');
                 const reviews = await response.json();
                 if (Array.isArray(reviews) && reviews.length) {
                     reviewDatabase = reviews;
+                    saveStoredReviews(reviews);
                     return;
                 }
             } catch (error) {
                 console.warn('Could not load reviews from backend, using defaults.', error);
-                reviewDatabase = [...defaultReviews];
             }
+
+            reviewDatabase = [...defaultReviews];
         }
 
         async function postReview(review) {
-            const response = await fetch(API_REVIEW_ENDPOINT, {
-                method: 'POST',
-                mode: 'cors',
-                cache: 'no-store',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(review)
-            });
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            };
 
-            if (!response.ok) {
-                const errorBody = await response.json().catch(() => ({}));
-                throw new Error(errorBody.error || 'Review submission failed');
+            try {
+                const response = await fetch(API_REVIEW_ENDPOINT, {
+                    method: 'POST',
+                    mode: 'cors',
+                    cache: 'no-store',
+                    headers,
+                    body: JSON.stringify(review)
+                });
+
+                if (response.ok) {
+                    return response.json();
+                }
+            } catch (error) {
+                console.warn('Server review submission unavailable, using local fallback.', error);
             }
 
-            return response.json();
+            const storedReviews = getStoredReviews();
+            const updatedReviews = [review, ...storedReviews];
+            saveStoredReviews(updatedReviews);
+            reviewDatabase = updatedReviews;
+            return review;
         }
 
         function buildStarString(ratingValue) {

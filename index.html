@@ -322,7 +322,7 @@
 
         .page-transparent-canvas {
             position: relative;
-            background-image: url('image_0c5692.jpg');
+            background-image: url('image_0c5692.jpg.png');
             background-size: cover;
             background-position: center center;
             background-attachment: fixed;
@@ -1492,7 +1492,7 @@
             subLabelNode.innerText = `${sizeLabelStr} package core configuration rate matrix metrics.`;
         }
 
-        const API_REVIEW_ENDPOINT = 'http://localhost:3000/api/reviews';
+        const API_REVIEW_ENDPOINT = '/api/reviews';
 
         const defaultReviews = [
             { name: "Global Trading Corp (Japan)", date: "3 weeks ago", stars: "★★★★★", content: "Phytosanitary documentation clear, pristine high-integrity green color indexing profile. Exceptional quality." },
@@ -1538,9 +1538,50 @@
             return response.json();
         }
 
+        function buildStarString(ratingValue) {
+            const numericRating = Math.max(1, Math.min(5, Number(ratingValue) || 5));
+            return '★'.repeat(numericRating) + '☆'.repeat(5 - numericRating);
+        }
+
+        function updateReviewSummary() {
+            const summaryRatingNode = document.querySelector('.reviews-summary-box .rating-big');
+            const summaryStarsNode = document.querySelector('.reviews-summary-box .stars');
+            const summaryTextNode = document.querySelector('.reviews-summary-box p');
+
+            if (!summaryRatingNode || !summaryStarsNode || !summaryTextNode) return;
+
+            if (!reviewDatabase.length) {
+                summaryRatingNode.innerHTML = '4.5 <span style="font-size:20px; opacity:0.6;">/ 5.0</span>';
+                summaryStarsNode.innerHTML = '★★★★★';
+                summaryTextNode.innerText = 'Based on verified international client custom compliance reports';
+                return;
+            }
+
+            const ratings = reviewDatabase.map(review => {
+                const starCount = (review.stars || '').split('').filter(char => char === '★').length;
+                return Number.isFinite(starCount) ? starCount : 5;
+            });
+            const averageRating = ratings.reduce((sum, value) => sum + value, 0) / ratings.length;
+            const roundedAverage = averageRating.toFixed(1);
+
+            summaryRatingNode.innerHTML = `${roundedAverage} <span style="font-size:20px; opacity:0.6;">/ 5.0</span>`;
+            summaryStarsNode.innerHTML = buildStarString(Math.round(averageRating));
+            summaryTextNode.innerText = `Based on ${reviewDatabase.length} verified international client custom compliance reports`;
+        }
+
         function renderReviews() {
             const container = document.getElementById('reviewsContainer');
             container.innerHTML = '';
+
+            if (!reviewDatabase.length) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'review-card';
+                emptyState.innerHTML = '<p style="font-size:14px; opacity:0.9;">No verified reviews yet. Be the first to share your experience.</p>';
+                container.appendChild(emptyState);
+                updateReviewScroll();
+                updateReviewSummary();
+                return;
+            }
             
             const processingArray = [...reviewDatabase, ...reviewDatabase];
             
@@ -1558,6 +1599,7 @@
                 container.appendChild(card);
             });
             updateReviewScroll();
+            updateReviewSummary();
         }
 
         function updateReviewScroll() {
@@ -1714,22 +1756,69 @@
         }, { rootMargin: '-50% 0px -50% 0px' });
         document.querySelectorAll("section").forEach(section => observer.observe(section));
 
-        // 2. Enquiry Form Auto-Refresh Logic
-        function submitEnquiry(event) {
-            event.preventDefault();
-            const form = document.getElementById('enquiryForm');
-            const successMsg = document.getElementById('formSuccess');
-            
+        // 2. Enquiry Form Auto-Refresh Logic and submission handling
+        async function submitEnquiry(event) {
+    event.preventDefault();
+
+    // 1. Setup UI Elements
+    const form = document.getElementById('enquiryForm');
+    const successMsg = document.getElementById('formSuccess');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    // Configuration - Replace with your real details
+    const ACCESS_KEY = '7f923ec0-506b-4492-ad2f-16435ba00916'; 
+    const API_ENDPOINT = 'https://api.web3forms.com/submit'; // Or your service URL
+
+    // 2. Prepare Data
+    const formData = {
+        access_key: ACCESS_KEY, // Many services require the key inside the body
+        name: document.getElementById('clientName').value,
+        email: document.getElementById('clientEmail').value,
+        size: document.getElementById('selectedSizeField').value,
+        qty: document.getElementById('orderQty').value,
+        message: document.getElementById('clientMessage').value
+    };
+
+    // 3. UI: Loading State
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    try {
+        // 4. API Call
+        const response = await fetch(API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // 5. UI: Success State
             form.style.display = 'none';
             successMsg.style.display = 'block';
 
+            // 6. UI: Auto-Refresh Logic (Code 2 integration)
             setTimeout(() => {
                 form.style.display = 'block';
                 successMsg.style.display = 'none';
                 form.reset();
-            }, 5000); 
-        
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Official RFQ / Enquiry';
+            }, 5000);
+        } else {
+            throw new Error(result.message || 'Submission failed');
         }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Official RFQ / Enquiry';
+    }
+}
 
     </script>
 
